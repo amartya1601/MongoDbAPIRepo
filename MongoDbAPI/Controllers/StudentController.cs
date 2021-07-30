@@ -28,27 +28,52 @@ namespace MongoDbAPI.Controllers
 
         // GET api/<ValuesController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IEnumerable<Student> Get(int id)
         {
-            return "value";
+            var db = mc.GetDatabase("studentdb");
+            var collection = db.GetCollection<Student>("student");
+            var res = (IEnumerable<Student>)collection.Find<Student>(x => x.stud == id ).ToList();
+            return res;
         }
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IEnumerable<Student> Post([FromBody] Student value)
         {
+            var db = mc.GetDatabase("studentdb");
+            var collection = db.GetCollection<Student>("student");
+            collection.InsertOne(value);
+            var res = (IEnumerable<Student>)collection.Find<Student>(x => true).ToList();
+            return res;
+
         }
 
         // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public IEnumerable<Student> Put([FromBody] Student value)
         {
+            var db = mc.GetDatabase("studentdb");
+            var collection = db.GetCollection<Student>("student");
+            try
+            {
+                var update = (IEnumerable<Student>)collection.UpdateOne((x => x.stud == value.stud), Builders<Student>.Update.Set("firstName", value.firstName).Set("lastName", value.lastName).Set("age", value.age));
+                //var update = collection.FindOneAndUpdateAsync(Builders<Employee>.Filter.Eq("Id", objVM.Id), Builders<Employee>.Update.Set("Name", objVM.Name).Set("Department", objVM.Department).Set("Address", objVM.Address).Set("City", objVM.City).Set("Country", objVM.Country));
+                
+            }
+            catch(Exception e) { }
+            var res = (IEnumerable<Student>)collection.Find<Student>(x => true).ToList();
+            return res;
         }
 
         // DELETE api/<ValuesController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IEnumerable<Student> Delete(int id)
         {
+            var db = mc.GetDatabase("studentdb");
+            var collection = db.GetCollection<Student>("student");
+            collection.DeleteOne<Student>(x => x.stud == id);
+            var res = (IEnumerable<Student>)collection.Find<Student>(x => true).ToList();
+            return res;
         }
     }
 }

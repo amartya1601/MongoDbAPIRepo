@@ -10,14 +10,12 @@ namespace MongoDbAPI.Models
     {
         [BsonId]
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-        public string Id {
-            
-            get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string id { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
 
-        public int Stud { get; set; }
+        public double stud { get; set; }
 
-        public int Age { get; set; }
+        public double age { get; set; }
     }
 }
